@@ -26,6 +26,9 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           region: ap-south-1
+          mask-password: false
+          registry-type: private
+          skip-logout: false
 
       - name: Login to Docker registry
         env:
