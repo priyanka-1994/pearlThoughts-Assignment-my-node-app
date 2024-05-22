@@ -9,7 +9,7 @@ env:
   ECR_REPOSITORY: ecr-repo-pearlthoghts           # set this to your Amazon ECR repository name
   ECS_SERVICE: hello-world-service               # set this to your Amazon ECS service name
   ECS_CLUSTER: hello_world_cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: main                       # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: hello-world-task                      # set this to the path to your Amazon ECS task definition
                                                   # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: hello-world-container           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
@@ -22,6 +22,21 @@ jobs:
       steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
