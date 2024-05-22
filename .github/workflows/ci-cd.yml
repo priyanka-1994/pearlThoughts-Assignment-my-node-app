@@ -23,7 +23,7 @@ jobs:
       
       - name: Login to Amazon ECR
         id: ecr_login
-        uses: aws-actions/amazon-ecr-login@v4
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Login to Docker registry
         env:
