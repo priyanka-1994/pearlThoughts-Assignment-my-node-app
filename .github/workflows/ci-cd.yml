@@ -25,7 +25,12 @@ jobs:
         id: ecr_login
         uses: aws-actions/amazon-ecr-login@v1
 
-
+      - name: Login to Docker registry
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
       - name: Build, tag, and push image to Docker image
         env:
