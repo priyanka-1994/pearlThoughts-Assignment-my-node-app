@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: self-hosted
 
+    strategy:
+      matrix:
+        terraform_version: [1.0.0]
+        node_version: ['16']
+
     env:
       AWS_REGION: ap-south-1
       ECR_REPOSITORY: ecr-repo-pearlthoghts
@@ -34,12 +39,12 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.0
+          terraform_version: ${{ matrix.terraform_version }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: ${{ matrix.node_version }}
 
       - name: Install dependencies
         run: npm install
@@ -58,7 +63,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve 
         
       - name: Login to Amazon ECR
         id: ecr_login
