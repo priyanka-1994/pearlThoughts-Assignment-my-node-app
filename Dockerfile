@@ -1,3 +1,4 @@
+#base image
 FROM node:20
 
 # Install curl and Node.js
