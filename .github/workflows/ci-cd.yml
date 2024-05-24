@@ -15,7 +15,7 @@ jobs:
         node_version: ['16']
 
     env:
-      AWS_REGION: ap-south-1
+      AWS_REGION: us-east-1
       ECR_REPOSITORY: ecr-repo-pearlthoghts
       ECS_SERVICE: hello-world-service
       ECS_CLUSTER: hello_world_cluster
@@ -69,7 +69,7 @@ jobs:
         id: ecr_login
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          region: ap-south-1
+          region: us-east-1
           registry: ${{ env.ECR_REPOSITORY }}
           mask-password: false
           registry-type: 'self-hosted'
@@ -96,8 +96,8 @@ jobs:
         env: 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ap-south-1
-        run: aws ecs update-service --cluster hello_world_cluster --service hello-world-service --force-new-deployment --region ap-south-1
+          AWS_DEFAULT_REGION: us-east-1
+        run: aws ecs update-service --cluster hello_world_cluster --service hello-world-service --force-new-deployment --region us-east-1
       
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
