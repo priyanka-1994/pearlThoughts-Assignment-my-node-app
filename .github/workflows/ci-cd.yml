@@ -51,7 +51,9 @@ jobs:
         run: npm install
 
       - name: Ensure unzip is installed
-        run: sudo apt-get update && sudo apt-get install -y unzip
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip || (sudo apt-get install -y apt-utils && sudo apt-get install -y unzip)
 
       - name: Login to Amazon ECR
         id: ecr_login
