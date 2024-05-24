@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-south-1"
+  region = "us-east-1"
   access_key = var.AWS_ACCESS_KEY_ID
   secret_key = var.AWS_SECRET_ACCESS_KEY
 }
@@ -17,7 +17,7 @@ resource aws_vpc "main" {
 resource "aws_subnet" "public"{
     vpc_id = aws_vpc.main.id
     cidr_block = "10.0.0.0/24"
-    availability_zone = "ap-south-1a"
+    availability_zone = "us-east-1a"
     map_public_ip_on_launch = true
     
     tags = {
