@@ -1,29 +1,23 @@
 name: Deploy to Amazon ECS
 
 on:
-   push:
-      branches:
-        - master
+  push:
+    branches:
+      - master
+
 jobs:
   build:
-     runs-on: self-hosted
-   
-env:
-  AWS_REGION: ap-south-1                           # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: ecr-repo-pearlthoghts           # set this to your Amazon ECR repository name
-  ECS_SERVICE: hello-world-service               # set this to your Amazon ECS service name
-  ECS_CLUSTER: hello_world_cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: hello-world-task                      # set this to the path to your Amazon ECS task definition
-                                                  # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: hello-world-container           # set this to the name of the container in the
-                                               # containerDefinitions section of your task definition
+    runs-on: self-hosted
 
-      
-jobs:
-   deploy:
-      runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ap-south-1
+      ECR_REPOSITORY: ecr-repo-pearlthoghts
+      ECS_SERVICE: hello-world-service
+      ECS_CLUSTER: hello_world_cluster
+      ECS_TASK_DEFINITION: hello-world-task
+      CONTAINER_NAME: hello-world-container
 
-      steps:
+    steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -38,15 +32,13 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -var="AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
-
       - name: Terraform Apply
         run: terraform apply -auto-approve -parallelism=3
-
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-           node-version: '20'
+          node-version: '20'
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
@@ -57,7 +49,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install  
-      
+
       - name: Login to Amazon ECR
         id: ecr_login
         uses: aws-actions/amazon-ecr-login@v1
@@ -83,17 +75,15 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ecr-repo-pearlthoghts
           IMAGE_TAG: ${{ github.sha }}
-
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Update ECS Service
         env: 
-           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID}}
-           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-           AWS_DEFAULT_REGION: ap-south-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ap-south-1
         run: aws ecs update-service --cluster hello_world_cluster --service hello-world-service --force-new-deployment --region ap-south-1
       
       - name: Fill in the new image ID in the Amazon ECS task definition
@@ -111,8 +101,3 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
-
-
-
-
-        
