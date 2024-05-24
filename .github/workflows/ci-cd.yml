@@ -21,6 +21,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Print PATH variable
+        run: echo $PATH
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
