@@ -55,6 +55,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y unzip || (sudo apt-get install -y apt-utils && sudo apt-get install -y unzip)
           sudo chmod +x $(which unzip)
+          export PATH="$PATH:/usr/bin"  # Assuming unzip is installed in /usr/bin
+
 
       - name: Login to Amazon ECR
         id: ecr_login
